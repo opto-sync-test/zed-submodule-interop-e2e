@@ -17,8 +17,8 @@ Source organization: `opto-sync`
 
 | Source | Commit | Branch observed |
 |---|---:|---|
-| `opto-sync/opto-sync-clients` | `068414c8ff7d4262d0a395959b5209d5908f0fcc` | `main` |
-| `zed-pkg/zed-cli` | `7977b1d43231a68e1ac34903e0f18cef5135add6` | `main` |
+| `opto-sync/opto-sync-clients` | `c93672ebfe7659243cafcd9d108ab4f17f2b2a87` | `main` |
+| `zed-pkg/zed-cli` | `0f60163163f780546f6ba6b33cbc39d3a8fef988` | `main` |
 
 ## Dependency lanes
 
