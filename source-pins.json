@@ -3,12 +3,12 @@
   "sources": {
     "opto-sync/opto-sync-clients": {
       "branch": "main",
-      "sha": "068414c8ff7d4262d0a395959b5209d5908f0fcc",
+      "sha": "c93672ebfe7659243cafcd9d108ab4f17f2b2a87",
       "exists": true
     },
     "zed-pkg/zed-cli": {
       "branch": "main",
-      "sha": "7977b1d43231a68e1ac34903e0f18cef5135add6",
+      "sha": "0f60163163f780546f6ba6b33cbc39d3a8fef988",
       "exists": true
     }
   }
