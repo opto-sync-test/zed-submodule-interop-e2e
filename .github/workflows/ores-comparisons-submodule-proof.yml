@@ -1,0 +1,61 @@
+name: ores-comparisons zed submodule proof
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Require protected cross-organization read credential
+        env:
+          TEST_FLEET_READ_TOKEN: ${{ secrets.TEST_FLEET_READ_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$TEST_FLEET_READ_TOKEN"
+
+      - name: Check out carrier
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out exact ores-comparisons candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ORESoftware/ores-comparisons
+          ref: c14947c9b0f88d1f42dac7abe6f0319eb8f059ba
+          path: source/ores-comparisons
+          persist-credentials: false
+          token: ${{ secrets.TEST_FLEET_READ_TOKEN }}
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+
+      - name: Build exact pinned Zed CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo install \
+            --git https://github.com/zed-pkg/zed-cli \
+            --rev 17412050a0f4c4f963008f0de9abf3651d42af08 \
+            --locked \
+            --root "$RUNNER_TEMP/zed" \
+            --bin zed
+
+      - name: Prove fresh-clone private submodule recovery
+        shell: bash
+        env:
+          TEST_FLEET_READ_TOKEN: ${{ secrets.TEST_FLEET_READ_TOKEN }}
+        run: |
+          set -euo pipefail
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0="url.https://x-access-token:${TEST_FLEET_READ_TOKEN}@github.com/.insteadOf"
+          export GIT_CONFIG_VALUE_0="https://github.com/"
+          export ZED_BIN="$RUNNER_TEMP/zed/bin/zed"
+          cd source/ores-comparisons
+          bash scripts/verify_fresh_clone_submodules.sh
